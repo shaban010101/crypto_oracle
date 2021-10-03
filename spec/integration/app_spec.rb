@@ -20,6 +20,32 @@ RSpec.describe 'app' do
   end
 
   context 'when valid parameters are provided' do
+    let(:expected_response) do
+      [
+          {
+              name: 'Bitcoin',
+              symbol: 'BTC',
+              price: '48135.84174593',
+              circulating_supply: '18831712',
+              max_supply: '21000000',
+          },
+          {
+              name: 'Ethereum',
+              symbol: 'ETH',
+              price: '3281.22963113',
+              circulating_supply: '117753964',
+              max_supply: nil,
+          },
+          {
+              name: 'XRP',
+              symbol: 'XRP',
+              price: '1.02691563',
+              circulating_supply: '46750439262',
+              max_supply: '100000000000',
+          }
+      ].each(&:stringify_keys!)
+    end
+
     before do
       stub_request(:get, "https://api.nomics.com/v1/currencies/ticker?key=#{API_KEY}&ids=BTC,ETH,XRP&page=1&interval=1d,7d,30d,365d,ytd&per_page=100").
           with(
@@ -34,7 +60,7 @@ RSpec.describe 'app' do
     it 'fetch currencies' do
       get '/api/currencies?tickers=BTC,ETH,XRP'
       expect(last_response).to be_ok
-      expect(JSON.parse(last_response.body)).to eq(JSON.parse(api_response))
+      expect(JSON.parse(last_response.body)).to eq(expected_response)
     end
   end
 
