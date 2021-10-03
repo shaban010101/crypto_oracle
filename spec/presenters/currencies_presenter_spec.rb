@@ -8,7 +8,7 @@ RSpec.describe CurrenciesPresenter do
     File.read('spec/fixtures/currencies_api_response.json')
   end
 
-  subject(:present) {described_class.new(api_response).present}
+  subject(:present) { described_class.new(api_response).present}
 
   describe '#present' do
     it 'outputs the response' do
