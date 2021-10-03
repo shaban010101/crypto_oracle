@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 ENV['APP_ENV'] = 'test'
 
 require './lib/forms/currencies_form'
@@ -20,7 +22,7 @@ RSpec.describe CurrenciesForm do
       expect(form).to_not be_valid
     end
 
-    it 'invalid with a non inclusive per_page'  do
+    it 'invalid with a non inclusive per_page' do
       form.per_page = 199
       expect(subject).to_not be_valid
     end
@@ -46,10 +48,10 @@ RSpec.describe CurrenciesForm do
 
     it 'sets default attributes when non are provided' do
       expect(form.attributes.symbolize_keys).to include(
-                                     {
-                                         page: 1, per_page: 100, interval: '1d,7d,30d,365d,ytd', tickers: nil
-                                     }
-                                 )
+        {
+          page: 1, per_page: 100, interval: '1d,7d,30d,365d,ytd', tickers: nil
+        }
+      )
     end
   end
 end

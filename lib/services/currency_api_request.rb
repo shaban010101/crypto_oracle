@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CurrencyApiRequest
   def initialize(dynamic_params, tickers)
     @dynamic_params = dynamic_params
