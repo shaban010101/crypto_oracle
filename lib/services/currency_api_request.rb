@@ -8,6 +8,7 @@ class CurrencyApiRequest
 
   def request
     uri = URI("https://api.nomics.com/v1/currencies/ticker?key=#{API_KEY}&ids=#{@tickers}&#{@dynamic_params}")
-    Net::HTTP.get(uri)
+    response = Net::HTTP.get_response(uri)
+    OpenStruct.new(status: response.code.to_i, body: response.body)
   end
 end
