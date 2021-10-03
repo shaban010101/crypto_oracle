@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-ENV['APP_ENV'] = 'test'
-
 require './app'
 require 'rspec'
 require 'rack/test'
@@ -9,6 +7,7 @@ require './spec/spec_helper'
 
 API_KEY = ENV['API_KEY']
 
+# rubocop:disable Metrics/BlockLength
 RSpec.describe 'app' do
   include Rack::Test::Methods
 
@@ -18,6 +17,14 @@ RSpec.describe 'app' do
 
   let(:api_response) do
     File.read('spec/fixtures/currencies_api_response.json')
+  end
+  let(:headers) do
+    {
+      'Accept' => '*/*',
+      'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
+      'Host' => 'api.nomics.com',
+      'User-Agent' => 'Ruby'
+    }
   end
 
   describe 'GET /api/currencies' do
@@ -50,14 +57,7 @@ RSpec.describe 'app' do
 
       before do
         stub_request(:get, "https://api.nomics.com/v1/currencies/ticker?key=#{API_KEY}&ids=BTC,ETH,XRP&page=1&interval=1d,7d,30d,365d,ytd&per_page=100")
-          .with(
-            headers: {
-              'Accept' => '*/*',
-              'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-              'Host' => 'api.nomics.com',
-              'User-Agent' => 'Ruby'
-            }
-          ).to_return(status: 200, body: api_response)
+          .with(headers: headers).to_return(status: 200, body: api_response)
       end
 
       it 'fetch currencies' do
@@ -85,14 +85,7 @@ RSpec.describe 'app' do
   describe 'GET api/currencies/fiat' do
     before do
       stub_request(:get, "https://api.nomics.com/v1/currencies/ticker?key=#{API_KEY}&ids=BTC&convert=USD")
-        .with(
-          headers: {
-            'Accept' => '*/*',
-            'Accept-Encoding' => 'gzip;q=1.0,deflate;q=0.6,identity;q=0.3',
-            'Host' => 'api.nomics.com',
-            'User-Agent' => 'Ruby'
-          }
-        ).to_return(status: 200, body: api_response)
+        .with(headers: headers).to_return(status: 200, body: api_response)
     end
 
     it 'responds with the fiat price' do
@@ -101,4 +94,18 @@ RSpec.describe 'app' do
       expect(JSON.parse(last_response.body).symbolize_keys).to eq({ currency: 'USD', fiat_price: '48135.84174593' })
     end
   end
+
+  describe 'api/currencies/calculate' do
+    before do
+      stub_request(:get, "https://api.nomics.com/v1/currencies/ticker?key=#{API_KEY}&ids=BTC,ETH&convert=USD")
+        .with(headers: headers).to_return(status: 200, body: api_response)
+    end
+
+    it 'responds with the value of one compared to the other' do
+      get '/api/currencies/calculate?from=BTC&to=ETH'
+      expect(last_response).to be_ok
+      expect(JSON.parse(last_response.body)).to eq({ '1 BTC' => '14.67 ETH' })
+    end
+  end
 end
+# rubocop:enable Metrics/BlockLength

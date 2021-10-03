@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-ENV['APP_ENV'] = 'test'
 require './spec/spec_helper'
 require './lib/services/currency_api_request'
 

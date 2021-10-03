@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-ENV['APP_ENV'] = 'test'
-
 require './lib/forms/currencies_form'
 require './spec/spec_helper'
 

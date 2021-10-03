@@ -8,6 +8,7 @@ require 'json'
 require './lib/forms/currencies_form'
 require './lib/presenters/currencies_presenter'
 require './lib/services/currency_api_request'
+require './lib/services/calculate_crypto_prices'
 
 API_KEY = ENV['API_KEY']
 
@@ -28,4 +29,11 @@ get '/api/currencies/fiat' do
   response = CurrencyApiRequest.new("convert=#{params[:fiat_currency]}", params[:crypto_currency]).request
   json_response = JSON.parse(response)
   { fiat_price: json_response.first['price'], currency: params[:fiat_currency] }.to_json
+end
+
+get '/api/currencies/calculate' do
+  response = CurrencyApiRequest.new('convert=USD', "#{params[:from]},#{params[:to]}").request
+  calculation = CalculateCryptoPrices.new(params[:from], params[:to], response)
+  calculation.calculate
+  calculation.as_json
 end
