@@ -26,8 +26,11 @@ RSpec.describe 'app' do
       'User-Agent' => 'Ruby'
     }
   end
-  let(:error_api_response)  do
-    "Authentication failed. Check your API key and our documentation at docs.nomics.com for details. If you don't have a key, you can get one at NomicsAPI.com\n"
+  let(:error_api_response) do
+    <<~ERROR
+      Authentication failed. Check your API key and our documentation at docs.nomics.com for details.#{' '}
+      If you don't have a key, you can get one at NomicsAPI.com\n"
+    ERROR
   end
 
   describe 'GET /api/currencies' do

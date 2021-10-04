@@ -21,8 +21,9 @@ RSpec.describe CalculateCryptoPrices do
       let(:api_response) { [].to_json }
 
       it 'outputs an error message' do
+        error_message = 'From/To values do not exist, please try values which do exist'
         expect(subject.calculate).to eq(OpenStruct.new(
-                                          body: { errors: ['From/To values do not exist, please try values which do exist'] }.to_json, status: 422
+                                          body: { errors: [error_message] }.to_json, status: 422
                                         ))
       end
     end

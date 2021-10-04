@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# rubocop:disable Style/Documentation
+
 class FiatCurrencyPresenter
   def initialize(response, fiat_currency)
     @response = JSON.parse(response)
@@ -18,3 +20,5 @@ class FiatCurrencyPresenter
     @fiat_currency
   end
 end
+
+# rubocop:enable Style/Documentation

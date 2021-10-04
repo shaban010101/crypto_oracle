@@ -15,7 +15,9 @@ class CalculateCryptoPrices
   def calculate
     return errors_object unless from_price && to_price
 
+    # rubocop:disable Style/FloatDivision
     value = (from_price.to_f / to_price.to_f).round(3)
+    # rubocop:enable Style/FloatDivision
     success_object(value)
   end
 
