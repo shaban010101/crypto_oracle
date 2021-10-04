@@ -11,7 +11,7 @@ RSpec.describe FiatCurrencyPresenter do
     context 'when the fiat currency has been provided' do
       subject(:present) { described_class.new(api_response, 'USD') }
 
-      it 'outputs the errors as json' do
+      it 'outputs the response body as json' do
         expect(present.as_json).to eq(JSON.generate({ fiat_price: '48135.84174593', currency: 'USD' }))
       end
     end
@@ -19,7 +19,7 @@ RSpec.describe FiatCurrencyPresenter do
     context 'when the fiat currency is nil' do
       subject(:present) { described_class.new(api_response, nil) }
 
-      it 'outputs the errors as json' do
+      it 'outputs the response body as json' do
         expect(present.as_json).to eq(JSON.generate({ fiat_price: '48135.84174593', currency: 'USD' }))
       end
     end

@@ -7,7 +7,7 @@ RSpec.describe ErrorPresenter do
   describe '#as_json' do
     subject(:presenter) { described_class.new(['Authentication failed']) }
 
-    it 'outputs the errors as json' do
+    it 'outputs the errors body as json' do
       expect(presenter.as_json).to eq(JSON.generate({ errors: ['Authentication failed'] }))
     end
   end
