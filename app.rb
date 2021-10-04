@@ -16,7 +16,7 @@ API_KEY = ENV['API_KEY']
 get '/api/currencies' do
   currencies_form = CurrenciesForm.new(params)
 
-  halt 422, { errors: currencies_form.errors.full_messages }.to_json unless currencies_form.valid?
+  halt 422, ErrorPresenter.new(currencies_form.errors.full_messages).as_json unless currencies_form.valid?
 
   dynamic_params = URI.encode_www_form(currencies_form.attributes.except('tickers'))
   response = CurrencyApiRequest.new(dynamic_params, params[:tickers]).request
@@ -25,7 +25,7 @@ get '/api/currencies' do
     CurrenciesPresenter.new(response.body).present.to_json
   else
     status response.status
-    ErrorPresenter.new(response).as_json
+    ErrorPresenter.new([response.body]).as_json
   end
 end
 
@@ -36,7 +36,7 @@ get '/api/currencies/fiat' do
     { fiat_price: json_response.first['price'], currency: params[:fiat_currency] }.to_json
   else
     status response.status
-    ErrorPresenter.new(response).as_json
+    ErrorPresenter.new([response.body]).as_json
   end
 end
 
@@ -49,6 +49,6 @@ get '/api/currencies/calculate' do
     calculation.as_json
   else
     status response.status
-    ErrorPresenter.new(response).as_json
+    ErrorPresenter.new([response.body]).as_json
   end
 end

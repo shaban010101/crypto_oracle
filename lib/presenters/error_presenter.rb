@@ -3,12 +3,12 @@
 # rubocop:disable Style/Documentation
 
 class ErrorPresenter
-  def initialize(reponsse)
-    @response = reponsse
+  def initialize(errors)
+    @errors = errors
   end
 
   def as_json
-    { errors: [@response.body] }.to_json
+    { errors: @errors }.to_json
   end
 end
 
