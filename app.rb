@@ -49,9 +49,9 @@ get '/api/currencies/calculate' do
   response = CurrencyApiRequest.new('convert=USD', "#{params[:from]},#{params[:to]}").request
 
   if response.status == 200
-    calculation = CalculateCryptoPrices.new(params[:from], params[:to], response.body)
-    calculation.calculate
-    calculation.as_json
+    calculation = CalculateCryptoPrices.new(params[:from], params[:to], response.body).calculate
+    status calculation.status
+    calculation.body
   else
     status response.status
     ErrorPresenter.new([response.body]).as_json

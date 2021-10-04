@@ -11,15 +11,20 @@ RSpec.describe CalculateCryptoPrices do
   end
 
   describe '#calculate' do
-    it 'calculates the price from one crypto to another' do
-      expect(subject.calculate).to eq({ '1 BTC' => '14.67 ETH' })
+    context 'when both currencies have been found' do
+      it 'calculates the price from one crypto to another' do
+        expect(subject.calculate).to eq(OpenStruct.new(body: { '1 BTC' => '14.67 ETH' }.to_json, status: 200))
+      end
     end
-  end
 
-  describe 'as_json' do
-    it 'calculates the price from one crypto to another' do
-      subject.calculate
-      expect(subject.as_json).to eq(JSON.generate({ '1 BTC' => '14.67 ETH' }))
+    context 'when one of currencies have been found' do
+      let(:api_response) { [].to_json }
+
+      it 'outputs an error message' do
+        expect(subject.calculate).to eq(OpenStruct.new(
+                                          body: { errors: ['From/To values do not exist, please try values which do exist'] }.to_json, status: 422
+                                        ))
+      end
     end
   end
 end

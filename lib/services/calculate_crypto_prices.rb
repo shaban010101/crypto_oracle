@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'json'
+require './lib/presenters/error_presenter'
 
 # rubocop:disable Style/Documentation
 
@@ -11,23 +12,41 @@ class CalculateCryptoPrices
     @response = JSON.parse(response)
   end
 
-  def as_json
-    @output.to_json
-  end
-
   def calculate
-    value = (from_price.to_f / to_price).round(3)
-    @output = { "1 #{@from}" => "#{value} #{@to}" }
+    return errors_object unless from_price && to_price
+
+    value = (from_price.to_f / to_price.to_f).round(3)
+    success_object(value)
   end
 
   private
 
+  def errors_object
+    OpenStruct.new(
+      body: ErrorPresenter.new(['From/To values do not exist, please try values which do exist']).as_json,
+      status: 422
+    )
+  end
+
+  def success_object(value)
+    OpenStruct.new(
+      body: { "1 #{@from}" => "#{value} #{@to}" }.to_json,
+      status: 200
+    )
+  end
+
   def from_price
-    @response.find { |currency| currency['symbol'] == @from }['price']
+    currency = @response.find { |crypto| crypto['symbol'] == @from }
+    return nil unless currency
+
+    currency['price']
   end
 
   def to_price
-    @response.find { |currency| currency['symbol'] == @to }['price']
+    currency = @response.find { |crypto| crypto['symbol'] == @to }
+    return nil unless currency
+
+    currency['price']
   end
 end
 
