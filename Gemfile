@@ -22,3 +22,4 @@ group :development do
 end
 
 gem 'activemodel', '~> 6.1.4'
+gem 'thin'
