@@ -2,9 +2,6 @@
 
 require 'sinatra'
 require 'sinatra/reloader' if development?
-require 'net/http'
-require 'uri'
-require 'json'
 require './lib/forms/currencies_form'
 require './lib/forms/calculate_currencies_form'
 require './lib/presenters/currencies_presenter'
@@ -16,7 +13,7 @@ require './lib/presenters/error_presenter'
 API_KEY = ENV['API_KEY']
 
 get '/api/currencies' do
-  currencies_form = CurrenciesForm.new(params)
+  currencies_form = CurrenciesForm.new(params.slice(:page, :per_page, :interval))
 
   halt 422, ErrorPresenter.new(currencies_form.errors.full_messages).as_json unless currencies_form.valid?
 
@@ -42,7 +39,7 @@ get '/api/currencies/fiat' do
 end
 
 get '/api/currencies/calculate' do
-  calculate_currencies_form = CalculateCurrenciesForm.new(params)
+  calculate_currencies_form = CalculateCurrenciesForm.new(params.slice(:from, :to))
 
   halt 422, ErrorPresenter.new(calculate_currencies_form.errors.full_messages).as_json unless calculate_currencies_form.valid?
 

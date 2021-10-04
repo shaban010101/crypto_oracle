@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require 'net/http'
+require 'uri'
+
 class CurrencyApiRequest
   def initialize(dynamic_params, tickers)
     @dynamic_params = dynamic_params

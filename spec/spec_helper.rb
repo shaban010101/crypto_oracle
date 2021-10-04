@@ -18,6 +18,7 @@
 require 'webmock/rspec'
 
 ENV['APP_ENV'] = 'test'
+ENV['API_KEY'] = 'testing-key'
 
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate

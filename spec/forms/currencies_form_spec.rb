@@ -47,7 +47,7 @@ RSpec.describe CurrenciesForm do
     it 'sets default attributes when none are provided' do
       expect(form.attributes.symbolize_keys).to include(
         {
-          page: 1, per_page: 100, interval: '1d,7d,30d,365d,ytd', tickers: nil
+          page: 1, per_page: 100, interval: '1d,7d,30d,365d,ytd'
         }
       )
     end

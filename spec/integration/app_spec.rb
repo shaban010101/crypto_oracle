@@ -1,11 +1,8 @@
 # frozen_string_literal: true
 
 require './app'
-require 'rspec'
 require 'rack/test'
 require './spec/spec_helper'
-
-API_KEY = ENV['API_KEY']
 
 # rubocop:disable Metrics/BlockLength
 RSpec.describe 'app' do
@@ -76,7 +73,7 @@ RSpec.describe 'app' do
 
       context 'when the nomics api responds unsuccessfully' do
         before do
-          stub_request(:get, "https://api.nomics.com/v1/currencies/ticker?key=#{API_KEY}&ids=BTC,ETH,XRP&page=1&interval=1d,7d,30d,365d,ytd&per_page=100")
+          stub_request(:get, "https://api.nomics.com/v1/currencies/ticker?key=#{API_KEY}&ids=BTC,ETH,XRP&page=1&interval=1d,7d,30d,365d,ytd&page=1&per_page=100")
             .with(headers: headers).to_return(status: 401, body: error_api_response)
         end
 
