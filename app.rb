@@ -24,7 +24,7 @@ get '/api/currencies' do
   response = CurrencyApiRequest.new(dynamic_params, params[:tickers]).request
 
   if response.status == 200
-    CurrenciesPresenter.new(response.body).present.to_json
+    CurrenciesPresenter.new(response.body).as_json
   else
     status response.status
     ErrorPresenter.new([response.body]).as_json

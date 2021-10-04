@@ -5,7 +5,7 @@ class CurrenciesPresenter
     @response = JSON.parse(response)
   end
 
-  def present
+  def as_json
     @response.map do |currency|
       {
         name: currency['name'],
@@ -14,6 +14,6 @@ class CurrenciesPresenter
         circulating_supply: currency['circulating_supply'],
         max_supply: currency['max_supply']
       }
-    end
+    end.to_json
   end
 end
